@@ -16,7 +16,7 @@ regen:
 	/bin/kernel-install add $(shell uname -r) /lib/modules/$(shell uname -r)/vmlinuz
 	mk-dracut-iscsi-target-iso.sh
 
-srpm:
+srpm: clean
 	mkdir -p rpmbuild/SOURCES
 	tar --transform "s;^./;${PKG}-${VER}/;" \
 		--exclude='./.git' --exclude='./rpmbuild' \

@@ -10,13 +10,12 @@ run_cmd="sshpass -e ssh $sshopts root@$target_ip"
     make srpm &&
     rpmbuild --define "_topdir $(pwd)/rpmbuild/" --undefine "dist" --rebuild rpmbuild/SRPMS/*)
 
-sshpass -e scp $sshopts $(find ../rpmbuild/RPMS/ -type f) "root@$target_ip:"
-$run_cmd rm -f /etc/dracut.conf.d/iscsi-target.conf dracut-iscsi-target-*.rpm
 if $run_cmd rpm -q dracut-iscsi-target; then
-    $run_cmd dnf reinstall -y dracut-iscsi-target-*.rpm
-else
-    $run_cmd dnf install -y dracut-iscsi-target-*.rpm
+    $run_cmd dnf remove -y --noautoremove dracut-iscsi-target
 fi
+$run_cmd rm -f dracut-iscsi-target-*.rpm
+sshpass -e scp $sshopts $(find ../rpmbuild/RPMS/ -type f) "root@$target_ip:"
+$run_cmd dnf install -y dracut-iscsi-target-*.rpm
 $run_cmd sed -i 's/^#//' /etc/dracut.conf.d/iscsi-target.conf
 $run_cmd /bin/kernel-install remove "\$(uname -r)"
 $run_cmd /bin/kernel-install add "\$(uname -r)" "/lib/modules/\$(uname -r)/vmlinuz"
