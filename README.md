@@ -38,6 +38,11 @@ to install and maintain a seperate copy.
     dracut --force
     ```
 
+  Note: Currently, if you use LVM or LUKS, you will have to edit the new
+  boot entry by hand in `/etc/grub2.cfg` by hand to remove any extra
+  cmdline options like `rd.lvm` that prevent exclusive access to the
+  disks. See TODO below.
+
 - Run this command to generate `iscsi-boot.iso`. This contains a
   copy of the kernel and initramfs, along with the necessary initrd
   cmdline arguments to do an iSCSI boot to the target. You will need to
@@ -95,6 +100,9 @@ information.
 
 ## TODO
 
+- Improve boot/grub entry generation
+- - Dont use existing cmdline args
+- - Current method can break normal boot entries on kernel upgrade
 - Improve iSCSI CHAP authentication
 - - Mutual auth
 - - initiator specific ACL
