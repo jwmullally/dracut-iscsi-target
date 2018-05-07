@@ -91,13 +91,32 @@ information.
 - Safer first-install initramfs generation instructions
 
 
-## Contributions
+## Developing
 
 Patches are welcome.
 
 - Test with the sample VMs in [test](./test) before opening a pull 
   request.
 - Stick to basic POSIX shell where possible. Minimize shellcheck errors.
+
+
+### LIO Target ConfigFS
+
+As most LIO Target documentation uses `targetcli`, you can use `strace`
+to see what it writes to the ConfigFS at `/sys/kernel/config/target/`:
+
+    targetcli clearconfig confirm=True
+    tcli() { strace -e trace=symlink,mkdir,open,openat,write -s 4096 targetcli $1 2>&1 | grep -A9999 run_cmdline ; }
+    tcli 'backstores/block create root0 /dev/vdb'
+    tcli 'iscsi/ create iqn.2009-02.com.example:for.all'
+    tcli 'iscsi/iqn.2009-02.com.example:for.all/tpg1 set attribute authentication=0 demo_mode_write_protect=0 generate_node_acls=1'
+    tcli 'iscsi/iqn.2009-02.com.example:for.all/tpg1/luns create /backstores/block/root0 1'
+
+
+## Reference
+
+- [LIO - The Linux SCSI Target Wiki](http://linux-iscsi.org/wiki/ISCSI)
+- [dracut.cmdline(7)](http://man7.org/linux/man-pages/man7/dracut.cmdline.7.html)
 
 
 ## Author
