@@ -1,8 +1,7 @@
 # dracut-iscsi-target
 
-*!! Currently there is NO AUTHENTICATION and NO ENCRYPTION for the iSCSI
-endpoint. See TODO below. For now, only run this on a trusted network
-with trusted hosts.*
+*!! Currently there is NO ENCRYPTION for the iSCSI endpoint. See TODO
+below. For now, only run this on a trusted network with trusted hosts.*
 
 This package adds an extra module to dracut that allows the initramfs to
 start as an iSCSI Target instead of doing a regular boot.
@@ -83,11 +82,9 @@ information.
 
 ## TODO
 
-- iSCSI CHAP authentication
-- - scrub iSCSI creds from /proc/cmdline after boot?
-- - Stop new connections after first to prevent rogue user code from 
-    accessing the disk?
-- - Bake creds into image or prompt? 
+- Improve iSCSI CHAP authentication
+- - Mutual auth
+- - initiator specific ACL
 - [MACSEC L2 encryption](https://developers.redhat.com/blog/2016/10/14/macsec-a-different-solution-to-encrypt-network-traffic/)
 - Support a custom kernel post-install script for automatically 
   generating the ISO and writing it to a custom location (e.g. USB key)

@@ -10,9 +10,11 @@ create_iscsi_target() {
     mkdir "$TARGET/iscsi"
     mkdir "$TARGET/iscsi/$IQN"
     mkdir "$TARGET/iscsi/$IQN/tpgt_1"
-    echo 0 > "$TARGET/iscsi/$IQN/tpgt_1/attrib/authentication"
+    echo 1 > "$TARGET/iscsi/$IQN/tpgt_1/attrib/authentication"
     echo 0 > "$TARGET/iscsi/$IQN/tpgt_1/attrib/demo_mode_write_protect"
     echo 1 > "$TARGET/iscsi/$IQN/tpgt_1/attrib/generate_node_acls"
+    echo -n "$(getarg rd.iscsi.username)" > "$TARGET/iscsi/$IQN/tpgt_1/auth/userid"
+    echo -n "$(getarg rd.iscsi.password)" > "$TARGET/iscsi/$IQN/tpgt_1/auth/password"
     if ! mkdir "$TARGET/iscsi/$IQN/tpgt_1/np/[::0]:3260"; then
         die "iscsi-target: Unable to listen on port 3260 for \"$IQN\""
     fi
@@ -41,6 +43,7 @@ add_iscsi_device() {
 
 IQN="$(getarg rd.iscsi_target.iqn)"
 if [ -n "$IQN" ]; then
+    info "iscsi-target: Creating target and adding devices..."
     create_iscsi_target
     for DEV in $(getargs rd.iscsi_target.dev=); do
         add_iscsi_device "$DEV"
