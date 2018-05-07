@@ -1,5 +1,7 @@
 # dracut-iscsi-target
 
+*!! Alpha software - may break your computer.*
+
 *!! Currently there is NO ENCRYPTION for the iSCSI endpoint. See TODO
 below. For now, only run this on a trusted network with trusted hosts.*
 
