@@ -1,5 +1,5 @@
 Name:           dracut-iscsi-target
-Version:        0.1
+Version:        0.2
 Release:        1%{?dist}
 Summary:        dracut module to run as an iSCSI Target instead of booting
 License:        MIT
@@ -45,5 +45,8 @@ make install DESTDIR=%{buildroot}
 
 
 %changelog
+* Mon May 7 2018 Joseph Mullally <jwmullally@gmail.com>
+- Add CHAP one-way authentication
+
 * Tue Apr 3 2018 Joseph Mullally <jwmullally@gmail.com>
 - Initial package
