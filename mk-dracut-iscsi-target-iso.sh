@@ -3,20 +3,21 @@ set -eux -o pipefail
 
 . /etc/dracut.conf.d/iscsi-target.conf
 
-ROOTDIR="$(mktemp -d)"
-cp -r /usr/share/syslinux "$ROOTDIR/isolinux"
+ISOROOT="$(mktemp -d)"
+cp -r /usr/share/syslinux "$ISOROOT/isolinux"
 
-cat > "$ROOTDIR/isolinux/isolinux.cfg" << EOF
-DEFAULT linux
+cat > "$ISOROOT/isolinux/isolinux.cfg" << EOF
+UI menu.c32
+DEFAULT linux-iscsi
 PROMPT 1
-TIMEOUT 30
-LABEL linux
+TIMEOUT 50
+LABEL linux-iscsi
  KERNEL vmlinuz
  APPEND initrd=initrd.img $dracut_iscsi_target_client_kernelargs
 EOF
 
-cp "/boot/vmlinuz-$(uname -r)" "$ROOTDIR/isolinux/vmlinuz"
-cp "/boot/initramfs-$(uname -r).img" "$ROOTDIR/isolinux/initrd.img"
+cp "/boot/vmlinuz-$(uname -r)" "$ISOROOT/isolinux/vmlinuz"
+cp "/boot/initramfs-$(uname -r).img" "$ISOROOT/isolinux/initrd.img"
 
 mkisofs \
     -b isolinux/isolinux.bin \
@@ -26,8 +27,8 @@ mkisofs \
     -boot-info-table \
     -eltorito-alt-boot \
     -o iscsi-boot.iso \
-    "$ROOTDIR"
+    "$ISOROOT"
 isohybrid iscsi-boot.iso
 
-rm -rf "$ROOTDIR/isolinux"
-rmdir "$ROOTDIR"
+rm -rf "$ISOROOT/isolinux"
+rmdir "$ISOROOT"
