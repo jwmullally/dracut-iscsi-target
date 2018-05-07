@@ -6,8 +6,8 @@ below. For now, only run this on a trusted network with trusted hosts.*
 This dracut module allows the initramfs to start as an iSCSI Target
 instead of doing a regular boot.
 
-This allows you to run the OS on another host using "netroot=iscsi:...".
-For example, you can run your laptop's OS on your desktop without having
+This allows you to run the OS on another host using `netroot=iscsi:...`.
+For example, you can run your laptop OS on your desktop without having
 to install and maintain a seperate copy.
 
 
@@ -18,21 +18,32 @@ to install and maintain a seperate copy.
 - Edit `/etc/dracut.conf.d/iscsi-target.conf`
 
 - Run these commands to regenerate the initramfs image for the running
-  kernel and to add the extra "iSCSI Target" boot entry. This should
+  kernel and to add the extra `iSCSI Target` boot entry. This should
   only be needed once, as these are automatically run every time a new
   kernel version is installed. (In case this fails, make sure you have
   at least one older kernel available as a fallback or make a backup 
   bootdisk).
 
     ```
-    /bin/kernel-install remove $(uname -r)
-    /bin/kernel-install add $(uname -r) /lib/modules/$(uname -r)/vmlinuz
+    kernel-install remove $(uname -r)
+    kernel-install add $(uname -r) /lib/modules/$(uname -r)/vmlinuz
     ```
 
-- Run `mk-dracut-iscsi-target-iso.sh` to generate `iscsi-boot.iso`.
-  This contains a copy of the kernel and initramfs with the necessary
-  initrd cmdline arguments to do an iSCSI boot to the target. You will
-  need to run this every time you install a new kernel (see TODO).
+  If you have only modified the configuration and want to regenerate
+  the initramfs image, you can just do:
+
+    ```
+    dracut --force
+    ```
+
+- Run this command to generate `iscsi-boot.iso`. This contains a
+  copy of the kernel and initramfs, along with the necessary initrd
+  cmdline arguments to do an iSCSI boot to the target. You will need to
+  run this every time you install a new kernel (see TODO).
+
+    ```
+    mk-dracut-iscsi-target-iso.sh
+    ```
 
 - Burn the ISO to a CD, or copy to a USB key like so:
 
@@ -40,10 +51,10 @@ to install and maintain a seperate copy.
     dd if=iscsi-boot.iso of=/dev/disk/by-id/usb-Kingston_DataTraveler_II+_ABCDE01234-0\:0
     ```
 
-- Reboot the host and select the "iSCSI Target" entry. After the target
+- Reboot the host and select the `iSCSI Target` entry. After the target
   is configured, this will stop the regular boot sequence and drop to an
   emergency shell. Use `journalctl` and check for lines beginning with
-  "iscsi-target:" to ensure everything is setup correctly.
+  `iscsi-target:` to ensure everything is setup correctly.
 
 - Boot the client/initiator host using the CD or USB key.
 
@@ -70,12 +81,13 @@ Due to network startup delays, the iSCSI initiator might need two
 connection attempts to succeed.
 
 You will need the kernel module for the NIC of the client/initiator
-host to be in the initramfs image. Either modify the "add_drivers"
-line, or set "hostonly=no" to include the module.
+host to be in the initramfs image. Either modify the `add_drivers`
+line, or set `hostonly=no` to include all modules. See `dracut.conf(5)`
+for more information.
 
 If the dracut boot sequence fails, you can debug it by appending
-"rd.shell" to the cmdline to drop to a shell on error, or use
-"rd.break=..." to set a breakpoint. See `dracut.cmdline(7)` for more
+`rd.shell` to the cmdline to drop to a shell on error, or use
+`rd.break=...` to set a breakpoint. See `dracut.cmdline(7)` for more
 information.
 
 
@@ -115,6 +127,7 @@ to see what it writes to the ConfigFS at `/sys/kernel/config/target/`:
 ## Reference
 
 - [LIO - The Linux SCSI Target Wiki](http://linux-iscsi.org/wiki/ISCSI)
+- [dracut.conf(5)](http://man7.org/linux/man-pages/man5/dracut.conf.5.html)
 - [dracut.cmdline(7)](http://man7.org/linux/man-pages/man7/dracut.cmdline.7.html)
 
 
