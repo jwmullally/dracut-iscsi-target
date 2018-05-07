@@ -3,11 +3,10 @@
 *!! Currently there is NO ENCRYPTION for the iSCSI endpoint. See TODO
 below. For now, only run this on a trusted network with trusted hosts.*
 
-This package adds an extra module to dracut that allows the initramfs to
-start as an iSCSI Target instead of doing a regular boot.
+This dracut module allows the initramfs to start as an iSCSI Target
+instead of doing a regular boot.
 
 This allows you to run the OS on another host using "netroot=iscsi:...".
-
 For example, you can run your laptop's OS on your desktop without having
 to install and maintain a seperate copy.
 
