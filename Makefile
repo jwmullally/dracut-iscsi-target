@@ -4,12 +4,12 @@ VER=0.2
 all: ;
 
 install:
-	install -m 0755 -D -t $(DESTDIR)/usr/lib/dracut/modules.d/95iscsi-target module-setup.sh
-	install -m 0755 -D -t $(DESTDIR)/usr/lib/dracut/modules.d/95iscsi-target iscsi-target.sh
-	install -m 0755 -D -t $(DESTDIR)/usr/lib/kernel/install.d 91-dracut-iscsi-target.install
-	install -m 0755 -D -t $(DESTDIR)/etc/kernel/postinst.d 52-dracut-iscsi-target.sh
-	install -m 0600 -D -t $(DESTDIR)/etc/dracut.conf.d/ iscsi-target.conf
-	install -m 0755 -D -t $(DESTDIR)/usr/sbin/ mk-dracut-iscsi-target-iso.sh
+	install -m 0755 -D -t $(DESTDIR)/usr/lib/dracut/modules.d/95iscsi-target src/module-setup.sh
+	install -m 0755 -D -t $(DESTDIR)/usr/lib/dracut/modules.d/95iscsi-target src/iscsi-target.sh
+	install -m 0755 -D -t $(DESTDIR)/usr/lib/kernel/install.d src/91-dracut-iscsi-target.install
+	install -m 0755 -D -t $(DESTDIR)/etc/kernel/postinst.d src/52-dracut-iscsi-target.sh
+	install -m 0600 -D -t $(DESTDIR)/etc/dracut.conf.d/ src/iscsi-target.conf
+	install -m 0755 -D -t $(DESTDIR)/usr/sbin/ src/mk-dracut-iscsi-target-iso.sh
 
 regen:
 	/bin/kernel-install remove $(shell uname -r)
