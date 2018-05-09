@@ -1,5 +1,5 @@
 Name:           dracut-iscsi-target
-Version:        0.2
+Version:        0.3
 Release:        1%{?dist}
 Summary:        dracut module to run as an iSCSI Target instead of booting
 License:        MIT
