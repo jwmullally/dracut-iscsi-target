@@ -38,7 +38,6 @@ make install DESTDIR=%{buildroot}
 %dir /usr/lib/dracut/modules.d/95iscsi-target
 /usr/lib/dracut/modules.d/95iscsi-target/module-setup.sh 
 /usr/lib/dracut/modules.d/95iscsi-target/iscsi-target.sh 
-/usr/lib/kernel/install.d/91-dracut-iscsi-target.install
 /etc/kernel/postinst.d/52-dracut-iscsi-target.sh
 /usr/sbin/mk-dracut-iscsi-target-iso.sh
 %attr(0600,root,root) %config(noreplace) /etc/dracut.conf.d/iscsi-target.conf 

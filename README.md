@@ -110,6 +110,7 @@ information.
 - Support a custom kernel post-install script for automatically 
   generating the ISO and writing it to a custom location (e.g. USB key)
 - Safer first-install initramfs generation instructions
+- systemd-boot EFI entry
 
 
 ## Developing
@@ -139,6 +140,7 @@ to see what it writes to the ConfigFS at `/sys/kernel/config/target/`:
 - [LIO - The Linux SCSI Target Wiki](http://linux-iscsi.org/wiki/ISCSI)
 - [dracut.conf(5)](http://man7.org/linux/man-pages/man5/dracut.conf.5.html)
 - [dracut.cmdline(7)](http://man7.org/linux/man-pages/man7/dracut.cmdline.7.html)
+- [systemd-boot](https://www.freedesktop.org/wiki/Software/systemd/systemd-boot/)
 
 
 ## Author
