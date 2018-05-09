@@ -120,8 +120,7 @@ information.
 - [MACSEC L2 encryption](https://developers.redhat.com/blog/2016/10/14/macsec-a-different-solution-to-encrypt-network-traffic/)
 - Support a custom kernel post-install script for automatically 
   generating the ISO and writing it to a custom location (e.g. USB key)
-- Safer first-install initramfs generation instructions
-- systemd-boot EFI entry
+- systemd-boot EFI entry (?)
 
 
 ## Developing
