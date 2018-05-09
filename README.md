@@ -81,16 +81,15 @@ Doing a `dnf reinstall kernel-core` can result in the kernel arguments
 for your regular kernel GRUB entries becoming corrupted.
 
 `new-kernel-pkg` (called from `kernel-install`/kernel RPM scripts) uses
-`grubby --copy-default` to copy the kernel arguments for new entries
-from the default entry marked in GRUB.
+`grubby --copy-default` to copy the kernel arguments for new entries from
+the default entry marked in GRUB. During `dnf reinstall kernel-core`,
+when the default kernel is removed `grubby` will copy from whatever
+is there, including the `iscsi-target` entry. This can result in extra
+kernel arguments being included in all the default kernels, preventing
+regular boot.
 
-During `dnf reinstall kernel-core`, when the default kernel is removed
-`grubby` will copy from whatever is there, including the `iscsi-target`
-entry. This can result in extra kernel arguments being included in all
-the default kernels, preventing regular boot.
-
-A workaround is to edit `/etc/grub2.cfg` manually and remove the extra
-args.
+A workaround is to edit `/etc/grub2.cfg` after the install and remove
+the extra args by hand.
 
 (Newer scripts for managing Boot Loader Spec `/boot/loader/entries`
 instead use files like `/etc/kernel/cmdline` to avoid this issue).
