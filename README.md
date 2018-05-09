@@ -27,21 +27,8 @@ to install and maintain a seperate copy.
   bootdisk).
 
     ```
-    kernel-install remove $(uname -r)
     kernel-install add $(uname -r) /lib/modules/$(uname -r)/vmlinuz
     ```
-
-  If you have only modified the configuration and want to regenerate
-  the initramfs image, you can just do:
-
-    ```
-    dracut --force
-    ```
-
-  Note: Currently, if you use LVM or LUKS, you will have to edit the new
-  boot entry by hand in `/etc/grub2.cfg` by hand to remove any extra
-  cmdline options like `rd.lvm` that prevent exclusive access to the
-  disks. See TODO below.
 
 - Run this command to generate `iscsi-boot.iso`. This contains a
   copy of the kernel and initramfs, along with the necessary initrd
@@ -68,6 +55,12 @@ to install and maintain a seperate copy.
 - After configuring the network and iSCSI target, the client should
   now begin booting into the target's OS.
 
+
+## Issues
+
+
+### Networking
+
 By default, the IP configuration for the target and initiator is a
 private point-to-point link. If the network interface you are using for
 the iSCSI connection is also the one you want to use as a regular
@@ -80,6 +73,27 @@ network connection, you can create an alias interface like so:
     BOOTPROTO=dhcp
     EOF
     $ ifup bootnet0:0
+
+
+### Reinstalling kernels
+
+Doing a `dnf reinstall kernel-core` can result in the kernel arguments
+for your regular kernel GRUB entries becoming corrupted.
+
+`new-kernel-pkg` (called from `kernel-install`/kernel RPM scripts) uses
+`grubby --copy-default` to copy the kernel arguments for new entries
+from the default entry marked in GRUB.
+
+During `dnf reinstall kernel-core`, when the default kernel is removed
+`grubby` will copy from whatever is there, including the `iscsi-target`
+entry. This can result in extra kernel arguments being included in all
+the default kernels, preventing regular boot.
+
+A workaround is to edit `/etc/grub2.cfg` manually and remove the extra
+args.
+
+(Newer scripts for managing Boot Loader Spec `/boot/loader/entries`
+instead use files like `/etc/kernel/cmdline` to avoid this issue).
 
 
 ## Troubleshooting
@@ -100,9 +114,6 @@ information.
 
 ## TODO
 
-- Improve boot/grub entry generation
-- - Dont use existing cmdline args
-- - Current method can break normal boot entries on kernel upgrade
 - Improve iSCSI CHAP authentication
 - - Mutual auth
 - - initiator specific ACL

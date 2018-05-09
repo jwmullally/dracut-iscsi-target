@@ -16,8 +16,8 @@ LABEL linux-iscsi
  APPEND initrd=initrd.img $dracut_iscsi_target_client_kernelargs
 EOF
 
-cp "/boot/vmlinuz-$(uname -r)" "$ISOROOT/isolinux/vmlinuz"
-cp "/boot/initramfs-$(uname -r).img" "$ISOROOT/isolinux/initrd.img"
+cp /boot/vmlinuz-iscsi-target "$ISOROOT/isolinux/vmlinuz"
+cp /boot/initramfs-iscsi-target.img "$ISOROOT/isolinux/initrd.img"
 
 mkisofs \
     -b isolinux/isolinux.bin \
