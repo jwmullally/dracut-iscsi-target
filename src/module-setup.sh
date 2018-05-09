@@ -17,8 +17,8 @@ installkernel() {
 }
 
 cmdline() {
-    echo "rd.iscsi.username=$dracut_iscsi_target_username"
-    echo "rd.iscsi.password=$dracut_iscsi_target_password"
+    echo -n " rd.iscsi.username=$dracut_iscsi_target_username"
+    echo -n " rd.iscsi.password=$dracut_iscsi_target_password"
 }
 
 # called by dracut
