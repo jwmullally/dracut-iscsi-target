@@ -44,6 +44,9 @@ make install DESTDIR=%{buildroot}
 
 
 %changelog
+* Wed May 9 2018 Joseph Mullally <jwmullally@gmail.com>
+- Improve handling of kernel upgrades
+
 * Mon May 7 2018 Joseph Mullally <jwmullally@gmail.com>
 - Add CHAP one-way authentication
 

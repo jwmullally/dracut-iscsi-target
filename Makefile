@@ -11,7 +11,6 @@ install:
 	install -m 0755 -D -t $(DESTDIR)/usr/sbin/ src/mk-dracut-iscsi-target-iso.sh
 
 regen:
-	/bin/kernel-install remove $(shell uname -r)
 	/bin/kernel-install add $(shell uname -r) /lib/modules/$(shell uname -r)/vmlinuz
 	mk-dracut-iscsi-target-iso.sh
 

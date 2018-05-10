@@ -12,10 +12,14 @@ This allows you to run the OS on another host using `netroot=iscsi:...`.
 For example, you can run your laptop OS on your desktop without having
 to install and maintain a seperate copy.
 
+## Packages
+
+- RPM <a href="https://copr.fedorainfracloud.org/coprs/jwmullally/dracut-iscsi-target/package/dracut-iscsi-target/"><img src="https://copr.fedorainfracloud.org/coprs/jwmullally/dracut-iscsi-target/package/dracut-iscsi-target/status_image/last_build.png" /></a>
+
 
 ## Usage
 
-- Install the package
+- Install the package.
 
 - Edit `/etc/dracut.conf.d/iscsi-target.conf`
 
