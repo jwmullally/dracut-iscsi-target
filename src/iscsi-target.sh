@@ -14,6 +14,8 @@ create_iscsi_target() {
     mkdir "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN"
     echo -n "$(getarg rd.iscsi.username)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/userid"
     echo -n "$(getarg rd.iscsi.password)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/password"
+    echo -n "$(getarg rd.iscsi.in.username)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/userid_mutual"
+    echo -n "$(getarg rd.iscsi.in.password)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/password_mutual"
 }
 
 enable_iscsi_target() {
