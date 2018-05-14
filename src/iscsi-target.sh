@@ -11,10 +11,9 @@ create_iscsi_target() {
     mkdir "$TARGET/iscsi/$IQN"
     mkdir "$TARGET/iscsi/$IQN/tpgt_1"
     echo 1 > "$TARGET/iscsi/$IQN/tpgt_1/attrib/authentication"
-    echo 0 > "$TARGET/iscsi/$IQN/tpgt_1/attrib/demo_mode_write_protect"
-    echo 1 > "$TARGET/iscsi/$IQN/tpgt_1/attrib/generate_node_acls"
-    echo -n "$(getarg rd.iscsi.username)" > "$TARGET/iscsi/$IQN/tpgt_1/auth/userid"
-    echo -n "$(getarg rd.iscsi.password)" > "$TARGET/iscsi/$IQN/tpgt_1/auth/password"
+    mkdir "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN"
+    echo -n "$(getarg rd.iscsi.username)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/userid"
+    echo -n "$(getarg rd.iscsi.password)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/password"
     if ! mkdir "$TARGET/iscsi/$IQN/tpgt_1/np/[::0]:3260"; then
         die "iscsi-target: Unable to listen on port 3260 for \"$IQN\""
     fi
@@ -39,10 +38,16 @@ add_iscsi_device() {
     if ! ln -s "$TARGET/core/iblock_0/root$LUN" "$TARGET/iscsi/$IQN/tpgt_1/lun/lun_$LUN/link_root$LUN"; then
         die "iscsi-target: Unable to add \"$DEVICE\" to \"$IQN\""
     fi
+    mkdir "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/lun_$LUN"
+    if ! ln -s "$TARGET/iscsi/$IQN/tpgt_1/lun/lun_$LUN" "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/lun_$LUN/link_lun_$LUN"; then
+        die "iscsi-target: Unable link \"$DEVICE\" to \"$IN_IQN\""
+    fi
+    echo "0" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/lun_$LUN/write_protect"
 }
 
 IQN="$(getarg rd.iscsi_target.iqn)"
-if [ -n "$IQN" ]; then
+IN_IQN="$(getarg rd.iscsi.initiator)"
+if [ -n "$IQN" -a -n "$IN_IQN" ]; then
     info "iscsi-target: Creating target and adding devices..."
     create_iscsi_target
     for DEV in $(getargs rd.iscsi_target.dev=); do
@@ -51,7 +56,7 @@ if [ -n "$IQN" ]; then
     info "iscsi-target: Started successfully."
     info "iscsi-target: Ready to receive initiator connections."
     info "iscsi-target: Target devices:"
-    for f in "$TARGET/iscsi/$IQN/tpgt_1/lun"/lun_*/*/udev_path; do
+    for f in "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN"/lun_*/*/*/udev_path; do
         info "iscsi-target:   $f:$(cat "$f")"
     done
     info "iscsi-target: Preventing regular boot and dropping to shell..."

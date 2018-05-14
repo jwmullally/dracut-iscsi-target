@@ -119,7 +119,6 @@ information.
 
 - Improve iSCSI CHAP authentication
 - - Mutual auth
-- - initiator specific ACL
 - [MACSEC L2 encryption](https://developers.redhat.com/blog/2016/10/14/macsec-a-different-solution-to-encrypt-network-traffic/)
 - Support a custom kernel post-install script for automatically 
   generating the ISO and writing it to a custom location (e.g. USB key)
@@ -146,6 +145,7 @@ to see what it writes to the ConfigFS at `/sys/kernel/config/target/`:
     tcli 'iscsi/ create iqn.2009-02.com.example:for.all'
     tcli 'iscsi/iqn.2009-02.com.example:for.all/tpg1 set attribute authentication=0 demo_mode_write_protect=0 generate_node_acls=1'
     tcli 'iscsi/iqn.2009-02.com.example:for.all/tpg1/luns create /backstores/block/root0 1'
+    tcli 'iscsi/iqn.2009-02.com.example:for.all/tpg1/acls create iqn.2009-02.com.initiator:for.all'
 
 
 ## Reference
