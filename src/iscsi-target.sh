@@ -14,6 +14,9 @@ create_iscsi_target() {
     mkdir "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN"
     echo -n "$(getarg rd.iscsi.username)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/userid"
     echo -n "$(getarg rd.iscsi.password)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/password"
+}
+
+enable_iscsi_target() {
     if ! mkdir "$TARGET/iscsi/$IQN/tpgt_1/np/[::0]:3260"; then
         die "iscsi-target: Unable to listen on port 3260 for \"$IQN\""
     fi
@@ -53,6 +56,7 @@ if [ -n "$IQN" -a -n "$IN_IQN" ]; then
     for DEV in $(getargs rd.iscsi_target.dev=); do
         add_iscsi_device "$DEV"
     done
+    enable_iscsi_target
     info "iscsi-target: Started successfully."
     info "iscsi-target: Ready to receive initiator connections."
     info "iscsi-target: Target devices:"
