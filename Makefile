@@ -1,5 +1,5 @@
 PKG=dracut-iscsi-target
-VER=0.3
+VER=0.4
 
 all: ;
 
