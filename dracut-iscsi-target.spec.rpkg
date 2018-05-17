@@ -1,11 +1,12 @@
-Name:           dracut-iscsi-target
-Version:        0.4
+Name:           {{{ git_name }}}
+Version:        {{{ git_version }}}
 Release:        1%{?dist}
 Summary:        dracut module to run as an iSCSI Target instead of booting
 License:        MIT
 URL:            https://github.com/jwmullally/dracut-iscsi-target
+VCS:            {{{ git_vcs }}}
 BuildArch:      noarch
-Source0:        %{name}-%{version}.tar.gz
+Source0:        {{{ git_pack }}}
 
 Requires:       dracut
 Requires:       dracut-network
@@ -24,7 +25,7 @@ to install and maintain a seperate copy.
 
 
 %prep
-%autosetup
+{{{ git_setup_macro }}}
 
 
 %install
@@ -44,14 +45,4 @@ make install DESTDIR=%{buildroot}
 
 
 %changelog
-* Sun May 13 2018 Joseph Mullally <jwmullally@gmail.com>
-- Add CHAP mutual authentication
-
-* Wed May 9 2018 Joseph Mullally <jwmullally@gmail.com>
-- Improve handling of kernel upgrades
-
-* Mon May 7 2018 Joseph Mullally <jwmullally@gmail.com>
-- Add CHAP one-way authentication
-
-* Tue Apr 3 2018 Joseph Mullally <jwmullally@gmail.com>
-- Initial package
+{{{ git_changelog }}}
