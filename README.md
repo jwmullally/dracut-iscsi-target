@@ -14,7 +14,12 @@ to install and maintain a seperate copy.
 
 ## Packages
 
-- RPM <a href="https://copr.fedorainfracloud.org/coprs/jwmullally/dracut-iscsi-target/package/dracut-iscsi-target/"><img src="https://copr.fedorainfracloud.org/coprs/jwmullally/dracut-iscsi-target/package/dracut-iscsi-target/status_image/last_build.png" /></a>
+- RPM: <a href="https://copr.fedorainfracloud.org/coprs/jwmullally/dracut-iscsi-target/package/dracut-iscsi-target/">Fedora COPR<img src="https://copr.fedorainfracloud.org/coprs/jwmullally/dracut-iscsi-target/package/dracut-iscsi-target/status_image/last_build.png" /></a>
+
+    ```
+    dnf copr enable jwmullally/dracut-iscsi-target
+    dnf install dracut-iscsi-target
+    ```
 
 
 ## Usage
@@ -121,6 +126,8 @@ information.
 - Support a custom kernel post-install script for automatically 
   generating the ISO and writing it to a custom location (e.g. USB key)
 - systemd-boot EFI entry (?)
+- Make initiator add devices in LUN order
+- - (wireshark suggests they are being added in order reported by target)
 
 
 ## Developing
