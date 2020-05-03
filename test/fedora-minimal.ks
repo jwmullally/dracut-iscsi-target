@@ -1,3 +1,6 @@
+# Kickstart file to create minimal Fedora host
+# Tested with Fedora 32
+
 text
 lang en_US.UTF-8
 keyboard us
@@ -17,4 +20,8 @@ part / --grow --fstype=ext4 --mkfsoptions="-U 5b6621d0-15ae-4c93-b9d6-f2a197a9ef
 %packages
 @core
 kernel
+%end
+
+%post
+sed -i 's/^#*PermitRootLogin .*$/PermitRootLogin yes/g' /etc/ssh/sshd_config
 %end

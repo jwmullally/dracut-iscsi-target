@@ -1,4 +1,4 @@
-rpmbuild/
+build/
 test/iscsi-boot.iso
 iscsi-boot.iso
 *.swp

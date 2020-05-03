@@ -53,9 +53,14 @@ add_iscsi_device() {
 IQN="$(getarg rd.iscsi_target.iqn)"
 IN_IQN="$(getarg rd.iscsi.initiator)"
 if [ -n "$IQN" -a -n "$IN_IQN" ]; then
+    # TODO: Handle with built-in dracut functionality
+    info "iscsi_target: Waiting for devices to settle"
+    sleep 3
     info "iscsi-target: Creating target and adding devices..."
     create_iscsi_target
+    info "iscsi-target: Creating target and adding devices..."
     for DEV in $(getargs rd.iscsi_target.dev=); do
+        info "iscsi-target:  Adding $DEV"
         add_iscsi_device "$DEV"
     done
     enable_iscsi_target
@@ -65,7 +70,10 @@ if [ -n "$IQN" -a -n "$IN_IQN" ]; then
     for f in "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN"/lun_*/*/*/udev_path; do
         info "iscsi-target:   $f:$(cat "$f")"
     done
+    # TODO: Handle with built-in dracut functionality
+    info "iscsi-target: Configuring network"
+    /usr/sbin/NetworkManager --configure-and-quit=initrd --no-daemon
     info "iscsi-target: Preventing regular boot and dropping to shell..."
-    emergency_shell --shutdown
+    emergency_shell --shutdown "iscsi-target" "iscsi-target started and ready to receive connections. Halting regular boot and dropping to shell."
     exit 1
 fi

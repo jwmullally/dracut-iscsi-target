@@ -1,0 +1,91 @@
+#!/bin/bash
+set -eu -o pipefail
+
+COMMAND="$1"
+KERNEL_VERSION="$2"
+ENTRY_DIR_ABS="$3"
+
+if ! [[ $KERNEL_INSTALL_MACHINE_ID ]]; then
+    exit 0
+fi
+
+if ! [[ "$ENTRY_DIR_ABS" ]]; then
+    exit 0
+fi
+
+MACHINE_ID=$KERNEL_INSTALL_MACHINE_ID
+
+ENTRY_DIR="/$MACHINE_ID/$KERNEL_VERSION"
+BOOT_ROOT=${ENTRY_DIR_ABS%$ENTRY_DIR}
+
+LOADER_ENTRY="$BOOT_ROOT/loader/entries/$MACHINE_ID-iscsi-target-$KERNEL_VERSION.conf"
+INITIATOR_ISO="$BOOT_ROOT/iscsi-boot-$KERNEL_VERSION.iso"
+
+if [[ $COMMAND == remove ]]; then
+    rm -f "$LOADER_ENTRY"
+    rm -f "$INITIATOR_ISO"
+    exit 0
+fi
+
+if ! [[ $COMMAND == add ]]; then
+    exit 1
+fi
+
+[[ -f /etc/os-release ]] && . /etc/os-release
+[[ -f /etc/dracut.conf.d/iscsi-target.conf ]] && . /etc/dracut.conf.d/iscsi-target.conf
+[[ "$dracut_iscsi_target_bootentries" != "yes" ]] && exit 0
+
+if ! [[ $PRETTY_NAME ]]; then
+    PRETTY_NAME="Linux $KERNEL_VERSION"
+fi
+
+[ "$KERNEL_INSTALL_VERBOSE" -gt 0 ] && \
+    echo "Creating $LOADER_ENTRY"
+{
+    echo "title      iSCSI Target ($KERNEL_VERSION) $PRETTY_NAME"
+    echo "version    $KERNEL_VERSION"
+    echo "machine-id $MACHINE_ID"
+    echo "linux      $dracut_iscsi_target_boot_prefix/vmlinuz-$KERNEL_VERSION"
+    echo "initrd     $dracut_iscsi_target_boot_prefix/initramfs-$KERNEL_VERSION.img"
+    echo "options    $dracut_iscsi_target_kernelargs"
+} > "$LOADER_ENTRY" || {
+    echo "Could not create loader entry '$LOADER_ENTRY'." >&2
+    exit 1
+}
+
+
+[ "$KERNEL_INSTALL_VERBOSE" -gt 0 ] && \
+    echo "Creating $INITIATOR_ISO"
+
+ISOROOT="$(mktemp -d)"
+cp -r /usr/share/syslinux "$ISOROOT/isolinux"
+
+cat > "$ISOROOT/isolinux/isolinux.cfg" << EOF
+UI menu.c32
+DEFAULT linux-iscsi
+PROMPT 1
+TIMEOUT 50
+LABEL linux-iscsi
+ KERNEL vmlinuz
+ APPEND initrd=initrd.img $dracut_iscsi_target_client_kernelargs
+EOF
+
+cp "$BOOT_ROOT/vmlinuz-$KERNEL_VERSION" "$ISOROOT/isolinux/vmlinuz"
+cp "$BOOT_ROOT/initramfs-$KERNEL_VERSION.img" "$ISOROOT/isolinux/initrd.img"
+
+mkisofs \
+    -quiet \
+    -eltorito-boot isolinux/isolinux.bin \
+    -eltorito-catalog isolinux/boot.cat \
+    -no-emul-boot \
+    -boot-load-size 4 \
+    -boot-info-table \
+    -eltorito-alt-boot \
+    -output "$INITIATOR_ISO" \
+    "$ISOROOT"
+isohybrid "$INITIATOR_ISO"
+
+rm -rf "$ISOROOT/isolinux"
+rmdir "$ISOROOT"
+
+exit 0

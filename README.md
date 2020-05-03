@@ -1,11 +1,11 @@
 # dracut-iscsi-target
 
-*!! Alpha software - may break your computer.*
+*!! Beta software - may prevent your computer from booting.*
 
 *!! Currently there is NO ENCRYPTION for the iSCSI endpoint. See TODO
 below. For now, only run this on a trusted network with trusted hosts.*
 
-This dracut module allows the initramfs to start as an iSCSI Target
+This dracut module allows the Fedora initramfs to start as an iSCSI Target
 instead of doing a regular boot.
 
 This allows you to run the OS on another host using `netroot=iscsi:...`.
@@ -26,32 +26,32 @@ to install and maintain a seperate copy.
 
 - Install the package.
 
-- Edit `/etc/dracut.conf.d/iscsi-target.conf`
+- Edit `/etc/dracut.conf.d/iscsi-target.conf`. The items you will want
+  to modify first are:
 
-- Run these commands to regenerate the initramfs image for the running
+  - `rd.iscsi_target.dev=<your target block devices>`
+  - `ifname=bootnet0:<your NIC MAC addresses>`
+  - `root=<your root block devices UUID>`
+  
+- Run this command to regenerate the initramfs image for the running
   kernel and to add the extra `iSCSI Target` boot entry. This should
-  only be needed once, as these are automatically run every time a new
+  only be needed once, as this is automatically run every time a new
   kernel version is installed. (In case this fails, make sure you have
   at least one older kernel available as a fallback or make a backup 
   bootdisk).
 
     ```
-    kernel-install add $(uname -r) /lib/modules/$(uname -r)/vmlinuz
+    kernel-install --verbose add $(uname -r) /lib/modules/$(uname -r)/vmlinuz
     ```
 
-- Run this command to generate `iscsi-boot.iso`. This contains a
-  copy of the kernel and initramfs, along with the necessary initrd
-  cmdline arguments to do an iSCSI boot to the target. You will need to
-  run this every time you install a new kernel (see TODO).
-
-    ```
-    mk-dracut-iscsi-target-iso.sh
-    ```
+  This also creates `/boot/iscsi-boot-$(uname -r).iso`. The ISO contains
+  a copy of the kernel and initramfs, along with the necessary initrd
+  cmdline arguments to do an iSCSI boot to the target.
 
 - Burn the ISO to a CD, or copy to a USB key like so:
 
     ```
-    dd if=iscsi-boot.iso of=/dev/disk/by-id/usb-Kingston_DataTraveler_II+_ABCDE01234-0\:0
+    dd if=/boot/iscsi-boot-$(uname -r).iso of=/dev/disk/by-id/usb-Kingston_DataTraveler_II+_ABCDE01234-0\:0
     ```
 
 - Reboot the host and select the `iSCSI Target` entry. After the target
@@ -73,35 +73,12 @@ to install and maintain a seperate copy.
 By default, the IP configuration for the target and initiator is a
 private point-to-point link. If the network interface you are using for
 the iSCSI connection is also the one you want to use as a regular
-network connection, you can create an alias interface like so:
+network connection, you can add DHCP to this interface with the following:
 
-    $ cat > /etc/sysconfig/network-scripts/ifcfg-bootnet0:0 << EOF
-    NM_CONTROLLED="no"
-    DEVICE="bootnet0:0"
-    ONBOOT=yes
-    BOOTPROTO=dhcp
-    EOF
-    $ ifup bootnet0:0
-
-
-### Reinstalling kernels
-
-Doing a `dnf reinstall kernel-core` can result in the kernel arguments
-for your regular kernel GRUB entries becoming corrupted.
-
-`new-kernel-pkg` (called from `kernel-install`/kernel RPM scripts) uses
-`grubby --copy-default` to copy the kernel arguments for new entries from
-the default entry marked in GRUB. During `dnf reinstall kernel-core`,
-when the default kernel is removed `grubby` will copy from whatever
-is there, including the `iscsi-target` entry. This can result in extra
-kernel arguments being included in all the default kernels, preventing
-regular boot.
-
-A workaround is to edit `/etc/grub2.cfg` after the install and remove
-the extra args by hand.
-
-(Newer scripts for managing Boot Loader Spec `/boot/loader/entries`
-instead use files like `/etc/kernel/cmdline` to avoid this issue).
+    rm -f /etc/sysconfig/network-scripts/ifcfg-bootnet0
+    nmcli con reload
+    nmcli con mod bootnet0 ipv4.method auto
+    nmcli con up bootnet0
 
 
 ## Troubleshooting
@@ -116,6 +93,7 @@ for more information.
 
 If the dracut boot sequence fails, you can debug it by appending
 `rd.shell` to the cmdline to drop to a shell on error, or use
+`rd.debug` to enable verbose shell command tracing, or
 `rd.break=...` to set a breakpoint. See `dracut.cmdline(7)` for more
 information.
 
@@ -125,9 +103,10 @@ information.
 - [MACSEC L2 encryption](https://developers.redhat.com/blog/2016/10/14/macsec-a-different-solution-to-encrypt-network-traffic/)
 - Support a custom kernel post-install script for automatically 
   generating the ISO and writing it to a custom location (e.g. USB key)
-- systemd-boot EFI entry (?)
 - Make initiator add devices in LUN order
-- - (wireshark suggests they are being added in order reported by target)
+  - (wireshark suggests they are being added in order reported by target)
+- Remove need for specifying `$dracut_iscsi_target_boot_prefix`
+- Sort "iSCSI Target" entry under Fedora entries in bootloader menu
 
 
 ## Developing
@@ -158,6 +137,7 @@ to see what it writes to the ConfigFS at `/sys/kernel/config/target/`:
 - [LIO - The Linux SCSI Target Wiki](http://linux-iscsi.org/wiki/ISCSI)
 - [dracut.conf(5)](http://man7.org/linux/man-pages/man5/dracut.conf.5.html)
 - [dracut.cmdline(7)](http://man7.org/linux/man-pages/man7/dracut.cmdline.7.html)
+- [dracut modules](https://github.com/dracutdevs/dracut/blob/master/README.modules)
 - [systemd-boot](https://www.freedesktop.org/wiki/Software/systemd/systemd-boot/)
 
 
@@ -167,4 +147,4 @@ Copyright (C) 2018 Joseph Mullally
 
 License: [MIT](./LICENCE.txt)
 
-Project: https://github.com/jwmullally/dracut-iscsi-target
+Project: <https://github.com/jwmullally/dracut-iscsi-target>

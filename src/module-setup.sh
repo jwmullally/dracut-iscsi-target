@@ -2,6 +2,7 @@
 
 # called by dracut
 check() {
+    require_binaries grep sort tail || return 1
     return 255
 }
 
@@ -27,5 +28,7 @@ cmdline() {
 install() {
     inst_multiple grep sort tail
     inst_hook pre-mount 99 "$moddir/iscsi-target.sh"
+    # Use the initiatorname set by "rd.iscsi.initiator"
+    rm -f "${initdir}/etc/iscsi/initiatorname.iscsi"
     cmdline > "${initdir}/etc/cmdline.d/95iscsi-target.conf"
 }

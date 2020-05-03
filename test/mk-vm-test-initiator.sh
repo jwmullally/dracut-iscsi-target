@@ -4,8 +4,8 @@ virt-install \
     --ram 2048 \
     --vcpus 2 \
     --arch x86_64 \
-    --os-variant fedora27 \
+    --os-variant fedora32 \
     --disk none \
-    --cdrom iscsi-boot.iso \
+    --cdrom /var/tmp/iscsi-boot.iso \
     --livecd \
     --network default,mac=52:54:00:14:d6:9c
