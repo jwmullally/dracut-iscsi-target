@@ -54,3 +54,18 @@ libvirt instance.
 #   Boot test-target into "iSCSI Target" mode
 #   Boot test-initiator
 ```
+
+
+### UEFI vs Legacy BIOS boot
+
+The example VMs use UEFI by default. To change to Legacy BIOS booting, 
+do the following:
+
+* `fedora-minimal.ks`: 
+
+  * Set `--disklabel=msdos`
+  * Remove `/boot/efi`
+
+* `mk-vm-test-target.sh`: 
+
+  * Remove `--boot UEFI`

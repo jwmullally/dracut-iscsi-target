@@ -14,7 +14,9 @@ rootpw --plaintext fedora
 shutdown
 
 zerombr
-clearpart --all --initlabel --disklabel=msdos
+clearpart --all --initlabel --disklabel=gpt
+part /boot/efi --fstype=efi --size=200
+part /boot --fstype=ext4 --size=512
 part / --grow --fstype=ext4 --mkfsoptions="-U 5b6621d0-15ae-4c93-b9d6-f2a197a9ef06"
 
 %packages

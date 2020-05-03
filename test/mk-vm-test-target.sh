@@ -5,6 +5,7 @@ virt-install \
     --vcpus 2 \
     --arch x86_64 \
     --os-variant fedora32 \
+    --boot uefi \
     --disk size=4,serial=abcd1234 \
     --disk size=1,serial=eabc5678 \
     --network default,mac=52:54:00:46:41:46 \

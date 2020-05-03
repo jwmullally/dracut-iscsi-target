@@ -107,6 +107,7 @@ information.
   - (wireshark suggests they are being added in order reported by target)
 - Remove need for specifying `$dracut_iscsi_target_boot_prefix`
 - Sort "iSCSI Target" entry under Fedora entries in bootloader menu
+- Add UEFI boot to the generated ISO
 
 
 ## Developing
