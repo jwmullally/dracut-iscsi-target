@@ -94,8 +94,9 @@ for more information.
 If the dracut boot sequence fails, you can debug it by appending
 `rd.shell` to the cmdline to drop to a shell on error, or use
 `rd.debug` to enable verbose shell command tracing, or
-`rd.break=...` to set a breakpoint. See `dracut.cmdline(7)` for more
-information.
+`rd.break=...` to set a breakpoint. Remove `rhgb` and `quiet`
+to see kernel and system messages. See `dracut.cmdline(7)` for 
+more information.
 
 
 ## TODO
