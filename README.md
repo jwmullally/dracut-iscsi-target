@@ -72,10 +72,21 @@ while still having access to all your laptop's files and programs.
   now begin booting into the target's OS.
 
 
-## Issues
+## FAQ
+
+### Why Dracut?
+
+Dracut already supports booting as an iSCSI Initiator pretty well. To
+serve the OS disk as an iSCSI target requires running a small Linux OS
+from memory, with access to the disks and network interface. Since Dracut
+is all about building initrd images and supporting disk access, it is
+ideally suited for this use case. In this situation, instead of doing a
+regular boot, we simply start the iSCSI target and halt the regular boot
+process. An added bonus is that we can use the same update-to-date kernel
+and initrd for both initiator and target, even when the kernel is updated.
 
 
-### Networking
+### How can I use bootnet0 as a regular network interface?
 
 By default, the IP configuration for the target and initiator is a
 private point-to-point link. If the network interface you are using for
@@ -86,6 +97,21 @@ network connection, you can add DHCP to this interface with the following:
     nmcli con reload
     nmcli con mod bootnet0 ipv4.method auto
     nmcli con up bootnet0
+
+
+### Do kernel upgrades work if I am running under the initiator?
+
+They appear to run without issue, but I have only done this a handfull
+of times. The only issue is the `/boot/iscsi-boot-$(uname -r).iso` file
+with the latest kernel will need to be re-written to your boot USB or CD
+everytime this happens. (See TODO below).
+
+If you don't update the initator boot image, it may occur that the version
+of the kernel your using to boot will be removed from the system during
+regular updates (e.g. if 5 newer kernels are installed). If this happens
+the `/lib/modules/$(uname -r)` folder for that kernel will be missing,
+and it will not be possible to load any kernel modules not already stored
+in the initrd.
 
 
 ## Troubleshooting
