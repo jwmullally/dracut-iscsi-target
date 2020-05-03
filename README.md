@@ -5,12 +5,19 @@
 *!! Currently there is NO ENCRYPTION for the iSCSI endpoint. See TODO
 below. For now, only run this on a trusted network with trusted hosts.*
 
-This dracut module allows the Fedora initramfs to start as an iSCSI Target
-instead of doing a regular boot.
 
-This allows you to run the OS on another host using `netroot=iscsi:...`.
-For example, you can run your laptop OS on your desktop without having
-to install and maintain a seperate copy.
+## Overview
+
+This Dracut module enables the Fedora initramfs to start as an iSCSI
+Target instead of doing a regular boot. This allows you to boot the OS
+of one host on another connected via Ethernet using `netroot=iscsi:...`.
+
+For example, you can run your laptop OS on your more powerful desktop
+while still having access to all your laptop's files and programs.
+
+
+![dracut-iscsi-target Usage Diagram](doc/dracut-iscsi-target.png)
+
 
 ## Packages
 
