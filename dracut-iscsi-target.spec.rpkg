@@ -33,9 +33,11 @@ make install DESTDIR=%{buildroot}
 
 
 %preun
-for kver in $(ls /lib/modules); do
+pushd /lib/modules
+for kver in *; do
     KERNEL_INSTALL_MACHINE_ID="$(cat /etc/machine-id)" /usr/lib/kernel/install.d/60-dracut-iscsi-target.install remove "$kver" /boot
 done
+popd
 
 
 %files
