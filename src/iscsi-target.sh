@@ -12,10 +12,10 @@ create_iscsi_target() {
     mkdir "$TARGET/iscsi/$IQN/tpgt_1"
     echo 1 > "$TARGET/iscsi/$IQN/tpgt_1/attrib/authentication"
     mkdir "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN"
-    echo -n "$(getarg rd.iscsi.username)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/userid"
-    echo -n "$(getarg rd.iscsi.password)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/password"
-    echo -n "$(getarg rd.iscsi.in.username)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/userid_mutual"
-    echo -n "$(getarg rd.iscsi.in.password)" > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/password_mutual"
+    getarg rd.iscsi.username | tr -d '\n' > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/userid"
+    getarg rd.iscsi.password  | tr -d '\n' > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/password"
+    getarg rd.iscsi.in.username  | tr -d '\n' > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/userid_mutual"
+    getarg rd.iscsi.in.password  | tr -d '\n' > "$TARGET/iscsi/$IQN/tpgt_1/acls/$IN_IQN/auth/password_mutual"
 }
 
 enable_iscsi_target() {
@@ -52,7 +52,7 @@ add_iscsi_device() {
 
 IQN="$(getarg rd.iscsi_target.iqn)"
 IN_IQN="$(getarg rd.iscsi.initiator)"
-if [ -n "$IQN" -a -n "$IN_IQN" ]; then
+if [ -n "$IQN" ] && [ -n "$IN_IQN" ]; then
     # TODO: Handle with built-in dracut functionality
     info "iscsi_target: Waiting for devices to settle"
     sleep 3

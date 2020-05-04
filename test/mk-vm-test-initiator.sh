@@ -1,3 +1,6 @@
+#!/bin/sh
+set -ex
+
 virt-install \
     --connect qemu:///system \
     --name test-initiator \
