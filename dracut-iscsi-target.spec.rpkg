@@ -31,7 +31,7 @@ while still having access to all your laptop's files and programs.
 
 
 %install
-make install DESTDIR=%{buildroot} PREFIX=%{_prefix} SYSCONFDIR=%{_sysconfdir}
+make install DESTDIR=%{buildroot} PREFIX=%{_prefix} SYSCONFDIR=%{_sysconfdir} SHAREDSTATEDIR=%{_sharedstatedir}
 
 
 %preun
@@ -51,6 +51,7 @@ popd
 %{_prefix}/lib/dracut/modules.d/95iscsi-target/iscsi-target.sh
 %{_prefix}/lib/kernel/install.d/60-dracut-iscsi-target.install
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/dracut.conf.d/iscsi-target.conf
+%attr(0700,root,root) %dir %{_sharedstatedir}/dracut/iscsi-target
 
 
 %changelog

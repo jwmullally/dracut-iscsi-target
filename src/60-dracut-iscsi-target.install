@@ -19,7 +19,7 @@ ENTRY_DIR="/$MACHINE_ID/$KERNEL_VERSION"
 BOOT_ROOT=${ENTRY_DIR_ABS%$ENTRY_DIR}
 
 LOADER_ENTRY="$BOOT_ROOT/loader/entries/$MACHINE_ID-iscsi-target-$KERNEL_VERSION.conf"
-INITIATOR_ISO="$BOOT_ROOT/iscsi-boot-$KERNEL_VERSION.iso"
+INITIATOR_ISO="/var/lib/dracut/iscsi-target/iscsi-boot-$KERNEL_VERSION.iso"
 
 if [[ $COMMAND == remove ]]; then
     rm -f "$LOADER_ENTRY"

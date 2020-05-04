@@ -20,4 +20,4 @@ $run_cmd dnf install -y dracut-iscsi-target-*.rpm
 $run_cmd sed -i 's/^#//' /etc/dracut.conf.d/iscsi-target.conf
 $run_cmd /bin/kernel-install --verbose add "\$(uname -r)" "/lib/modules/\$(uname -r)/vmlinuz"
 [ ! -e /var/tmp/iscsi-boot.iso ] || sudo rm /var/tmp/iscsi-boot.iso
-sshpass -e scp $sshopts "root@$target_ip:/boot/iscsi-boot-*.iso" /var/tmp/iscsi-boot.iso
+sshpass -e scp $sshopts "root@$target_ip:/var/lib/dracut/iscsi-target/iscsi-boot-*.iso" /var/tmp/iscsi-boot.iso

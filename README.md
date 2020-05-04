@@ -66,14 +66,14 @@ added.
     kernel-install --verbose add $(uname -r) /lib/modules/$(uname -r)/vmlinuz
     ```
 
-  This also creates `/boot/iscsi-boot-$(uname -r).iso`. The ISO contains
-  a copy of the kernel and initramfs, along with the necessary initrd
-  cmdline arguments to do an iSCSI boot to the target.
+  This also creates `/var/lib/dracut/iscsi-target/iscsi-boot-$(uname -r).iso`.
+  The ISO contains a copy of the kernel and initramfs, along with the
+  necessary initrd cmdline arguments to do an iSCSI boot to the target.
 
 - Burn the ISO to a CD, or copy to a USB key like so:
 
     ```
-    dd if=/boot/iscsi-boot-$(uname -r).iso of=/dev/disk/by-id/usb-Kingston_DataTraveler_II+_ABCDE01234-0\:0
+    dd if=/var/lib/dracut/iscsi-target/iscsi-boot-$(uname -r).iso of=/dev/disk/by-id/usb-Kingston_DataTraveler_II+_ABCDE01234-0\:0
     ```
 
   If you want this step to be done automatically every time a new kernel
@@ -129,7 +129,7 @@ equivilant to unplugging the harddrive from a running system.
 Kernel upgrades appear to run without issue, but I have only tested
 this a handful of times. This was made easier with the introduction of
 [BootLoaderSpec by default](https://fedoraproject.org/wiki/Changes/BootLoaderSpecByDefault).
-The only requirement is that the `/boot/iscsi-boot-$(uname -r).iso`
+The only requirement is that the `/var/lib/dracut/iscsi-target/iscsi-boot-$(uname -r).iso`
 file with the latest kernel will need to be re-written to your boot USB
 or CD everytime this happens. This can be done automatically by setting
 `dracut_iscsi_target_iso_auto_write_devices` as described above.
@@ -186,7 +186,6 @@ more information.
 - Remove need for specifying `$dracut_iscsi_target_boot_prefix`
 - Sort "iSCSI Target" entry under Fedora entries in bootloader menu
 - Add UEFI boot to the generated ISO
-- Move ISO from `/boot` to `/var/lib/dracut-iscsi-target`
 - Better integrate with dracut+systemd for network, device settling and 
   service target override.
 - Move `iscsi-target.conf` paramater descriptions in this README to the
