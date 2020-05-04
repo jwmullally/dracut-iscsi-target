@@ -101,17 +101,20 @@ network connection, you can add DHCP to this interface with the following:
 
 ### Do kernel upgrades work if I am running under the initiator?
 
-They appear to run without issue, but I have only done this a handfull
-of times. The only issue is the `/boot/iscsi-boot-$(uname -r).iso` file
-with the latest kernel will need to be re-written to your boot USB or CD
-everytime this happens. (See TODO below).
+Kernel upgrades appear to run without issue, but I have only tested
+this a handful of times. This was made easier with the introduction of
+[BootLoaderSpec by default](https://fedoraproject.org/wiki/Changes/BootLoaderSpecByDefault).
+The only requirement is that the `/boot/iscsi-boot-$(uname -r).iso`
+file with the latest kernel will need to be re-written to your boot USB
+or CD everytime this happens. This can be done automatically by setting
+`dracut_iscsi_target_iso_auto_write_devices` as described above.
 
-If you don't update the initator boot image, it may occur that the version
+If you don't update the initator boot image, eventually the version
 of the kernel your using to boot will be removed from the system during
-regular updates (e.g. if 5 newer kernels are installed). If this happens
+regular updates (e.g. if 5 newer kernels are installed). When this happens
 the `/lib/modules/$(uname -r)` folder for that kernel will be missing,
 and it will not be possible to load any kernel modules not already stored
-in the initrd.
+in the initrd from the old ISO.
 
 
 ## Troubleshooting
@@ -135,8 +138,6 @@ more information.
 ## TODO
 
 - [MACSEC L2 encryption](https://developers.redhat.com/blog/2016/10/14/macsec-a-different-solution-to-encrypt-network-traffic/)
-- Support a custom kernel post-install script for automatically 
-  generating the ISO and writing it to a custom location (e.g. USB key)
 - Make initiator add devices in LUN order
   - (wireshark suggests they are being added in order reported by target)
 - Remove need for specifying `$dracut_iscsi_target_boot_prefix`

@@ -88,4 +88,13 @@ isohybrid "$INITIATOR_ISO"
 rm -rf "$ISOROOT/isolinux"
 rmdir "$ISOROOT"
 
+for dev in $dracut_iscsi_target_iso_auto_write_devices; do
+    if [ -e "$dev" ]; then
+        [ "$KERNEL_INSTALL_VERBOSE" -gt 0 ] && \
+            echo "Writing $INITIATOR_ISO to $dev"
+        dd if="$INITIATOR_ISO" of="$dev" bs=1M status=none
+        blockdev --flushbufs "$dev"
+    fi
+done
+
 exit 0
