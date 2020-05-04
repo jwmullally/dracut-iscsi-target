@@ -8,6 +8,8 @@ VCS:            {{{ git_vcs }}}
 BuildArch:      noarch
 Source0:        {{{ git_pack }}}
 
+BuildRequires:  make
+
 Requires:       dracut >= 50
 Requires:       dracut-network
 Requires:       genisoimage
@@ -29,13 +31,13 @@ while still having access to all your laptop's files and programs.
 
 
 %install
-make install DESTDIR=%{buildroot}
+make install DESTDIR=%{buildroot} PREFIX=%{_prefix} SYSCONFDIR=%{_sysconfdir}
 
 
 %preun
 pushd /lib/modules
 for kver in *; do
-    KERNEL_INSTALL_MACHINE_ID="$(cat /etc/machine-id)" /usr/lib/kernel/install.d/60-dracut-iscsi-target.install remove "$kver" /boot
+    KERNEL_INSTALL_MACHINE_ID="$(cat /etc/machine-id)" %{_prefix}/lib/kernel/install.d/60-dracut-iscsi-target.install remove "$kver" /boot
 done
 popd
 
@@ -44,11 +46,11 @@ popd
 %defattr(-,root,root,0755)
 %doc README.md
 %doc LICENCE.txt
-%dir /usr/lib/dracut/modules.d/95iscsi-target
-/usr/lib/dracut/modules.d/95iscsi-target/module-setup.sh 
-/usr/lib/dracut/modules.d/95iscsi-target/iscsi-target.sh 
-/usr/lib/kernel/install.d/60-dracut-iscsi-target.install
-%attr(0600,root,root) %config(noreplace) /etc/dracut.conf.d/iscsi-target.conf 
+%dir %{_prefix}/lib/dracut/modules.d/95iscsi-target
+%{_prefix}/lib/dracut/modules.d/95iscsi-target/module-setup.sh
+%{_prefix}/lib/dracut/modules.d/95iscsi-target/iscsi-target.sh
+%{_prefix}/lib/kernel/install.d/60-dracut-iscsi-target.install
+%attr(0600,root,root) %config(noreplace) %{_sysconfdir}/dracut.conf.d/iscsi-target.conf
 
 
 %changelog
