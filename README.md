@@ -147,7 +147,8 @@ in the initrd from the old ISO.
 Dracut by default sets `hostonly=yes`, which causes the generated initrd
 images to only contain the kernel modules necessary to boot the current
 system. This keeps the initrd sizes small, which is important when `/boot`
-is a small seperate partition and around 5 previous kernels are installed.
+is a small seperate partition and around 5 previous kernels are installed,
+and also speeds up the boot process.
 
 While using this package and potentially installing new kernels
 when running under either the iSCSI initiator and original host,
