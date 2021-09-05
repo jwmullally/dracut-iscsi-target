@@ -7,7 +7,7 @@ virt-install \
     --ram 2048 \
     --vcpus 2 \
     --arch x86_64 \
-    --os-variant fedora32 \
+    --os-variant fedora34 \
     --disk none \
     --cdrom /var/tmp/iscsi-boot.iso \
     --livecd \

@@ -21,7 +21,7 @@ while still having access to all your laptop's files and programs.
 
 ## Supported Operating Systems
 
-- Fedora 32+
+- Fedora 34+
 
 There are no plans at this time to support other operating systems,
 but if they have good Dracut support and would not require too many

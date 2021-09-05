@@ -1,5 +1,5 @@
 # Kickstart file to create minimal Fedora host
-# Tested with Fedora 32
+# Tested with Fedora 34
 
 text
 lang en_US.UTF-8

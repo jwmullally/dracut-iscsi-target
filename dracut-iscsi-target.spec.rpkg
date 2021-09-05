@@ -10,7 +10,7 @@ Source0:        {{{ git_pack }}}
 
 BuildRequires:  make
 
-Requires:       dracut >= 50
+Requires:       dracut >= 53
 Requires:       dracut-network
 Requires:       genisoimage
 Requires:       iscsi-initiator-utils

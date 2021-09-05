@@ -5,6 +5,9 @@ type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
 TARGET='/sys/kernel/config/target'
 
 create_iscsi_target() {
+    if [ -n "$DRACUT_SYSTEMD" ]; then
+        systemctl start sys-module-configfs.device
+    fi
     modprobe -a target_core_mod target_core_iblock iscsi_target_mod
     mkdir "$TARGET/core/iblock_0"
     mkdir "$TARGET/iscsi"
@@ -71,8 +74,6 @@ if [ -n "$IQN" ] && [ -n "$IN_IQN" ]; then
         info "iscsi-target:   $f:$(cat "$f")"
     done
     # TODO: Handle with built-in dracut functionality
-    info "iscsi-target: Configuring network"
-    /usr/sbin/NetworkManager --configure-and-quit=initrd --no-daemon
     info "iscsi-target: Preventing regular boot and dropping to shell..."
     emergency_shell --shutdown "iscsi-target" "iscsi-target started and ready to receive connections. Halting regular boot and dropping to shell."
     exit 1
