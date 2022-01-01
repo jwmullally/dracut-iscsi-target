@@ -1,12 +1,12 @@
-Name:           {{{ git_name }}}
-Version:        {{{ git_version }}}
+Name:           {{{ git_dir_name }}}
+Version:        {{{ git_dir_version }}}
 Release:        1%{?dist}
 Summary:        dracut module to run as an iSCSI Target instead of booting
 License:        MIT
 URL:            https://github.com/jwmullally/dracut-iscsi-target
-VCS:            {{{ git_vcs path="$GIT_ROOT" }}}
+VCS:            {{{ git_dir_vcs }}}
 BuildArch:      noarch
-Source0:        {{{ git_pack path="$GIT_ROOT"}}}
+Source0:        {{{ git_dir_pack }}}
 
 BuildRequires:  make
 
@@ -27,7 +27,7 @@ while still having access to all your laptop's files and programs.
 
 
 %prep
-{{{ git_setup_macro path="$GIT_ROOT" }}}
+{{{ git_dir_setup_macro }}}
 
 
 %install
@@ -55,4 +55,4 @@ popd
 
 
 %changelog
-{{{ git_changelog }}}
+{{{ git_dir_changelog }}}
