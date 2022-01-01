@@ -1,11 +1,10 @@
 # Kickstart file to create minimal Fedora host
-# Tested with Fedora 34
+# Tested with Fedora 35
 
 text
 lang en_US.UTF-8
 keyboard us
 timezone Etc/UTC
-auth --useshadow --passalgo=sha512
 selinux --enforcing
 firewall --enabled --service=mdns
 services --enabled=sshd,NetworkManager,chronyd

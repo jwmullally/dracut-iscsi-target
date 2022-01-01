@@ -178,6 +178,15 @@ If the dracut boot sequence fails, you can debug it by appending
 to see kernel and system messages. See `dracut.cmdline(7)` for 
 more information.
 
+Calling `grub2-mkconfig` manually without `--no-grubenv-update`
+will overwrite all custom kernel `options` lines in
+`/boot/loader/entries/` with the default kernel cmdline. This will
+remove the extra iSCSI target kernel options in the boot loader
+entries that this package adds, causing them to just boot locally.
+`/usr/lib/kernel/install.d/99-grub-mkconfig.install` updates grub using
+`grub2-mkconfig --no-grubenv-update -o /boot/grub2/grub.cfg`, so you
+should probably do the same.
+
 
 ## TODO
 
